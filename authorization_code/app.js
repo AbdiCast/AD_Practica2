@@ -53,7 +53,7 @@ app.get('/login', function(req, res) {
 
   var state = generateRandomString(16); 
   res.cookie(stateKey, state); 
-  var show_dialog = true;
+  var show_dialog = false;
   // your application requests authorization                      
   var scope = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative';
   //var scopes = 'playlist-read-private playlist-read-collaborative';
@@ -135,38 +135,6 @@ var options2 = {
 
 
 
-
-// Llama a la función para obtener y mostrar las playlists
-obtenerPlaylists();
-
-const playlists = {
-       obtenerPlaylist: function() {
-          request.get(options2, function (error, response, body) {
-            if (!error && response.statusCode === 200) {
-
-
-              const items_var = body.items; //array
-              items_var.forEach(function (element) {
-                var objPlaylists = {
-                  name: element.name,
-                };
-                playlists.push(objPlaylists);// Agregar objPlaylists al array playlist (global)
-              });
-              //console.log(playlists);
-
-
-
-            } else {
-              res.redirect('/#' +
-                querystring.stringify({
-                  error: 'invalid_token'
-                }));
-            }
-            return items_var;
-          });
-
-        }
-      };
 
 
 
