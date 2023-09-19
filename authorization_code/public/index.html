@@ -35,15 +35,13 @@
       <button class="btn btn-default" id="obtain-new-token">Obtenga un nuevo token usando el token de actualización
       </button>
 
-<script>
-  //console.log("desde html: \n" + playlists);
- /* playlists.obtenerPlaylist().then((res)=> {
-    const list = JSON.parse(JSON.stringify(res));
-    console.log(res);
-  });*/
-</script>
-<h1>Mis Playlists de Spotify</h1>
-  <ul id="playlist-list"></ul>
+      <div>
+        <h2>Listas de Reproducción de Spotify</h2>
+        <button class="btn btn-default" id="obtain-playlist-list">Obtenga las listas de reproducciones
+        </button>
+        
+    <ul id="user-playlists"></ul>
+      </div>
 
  
 
@@ -87,9 +85,8 @@
   <!--handlebars -->
   
   <script id="user-playlists-template" type="text/x-handlebars-template">
-    <h2>Listas de Reproducción de Spotify</h2>
     <dl class="dl-horizontal">
-      <dt>Playlist</dt><dd class="text-overflow">{{name}}</dd>
+      <dt>Nombre: </dt><dd class="text-overflow">{{name}}</dd>
     </dl>
   </script>
  
@@ -173,7 +170,47 @@
           });
         }, false);
 
-        
+        var user_id = 'abdy.cast.ac'; // Reemplaza 'usuario_id' con el ID del usuario que deseas consultar
+        var apiUrl = 'https://api.spotify.com/v1/users/' + user_id + '/playlists';
+        var playlists = [];
+        document.getElementById('obtain-playlist-list').addEventListener('click', function () {
+          $.ajax({
+            url: apiUrl,
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+            },
+            success: function (response) {
+              // La respuesta contiene información sobre las listas de reproducción del usuario
+              //console.log('Listas de reproducción del usuario:', response.name);
+/*
+              const items_var = response.items; //array
+              items_var.forEach(function (element) {
+                var objPlaylists = {
+                  name: element.name,
+                };
+                playlists.push(objPlaylists);// Agregar objPlaylists al array playlist (global)
+              });
+              console.log(playlists);*/
+            },
+            error: function (error) {
+              console.error('Error al obtener las listas de reproducción del usuario:', error);
+            }
+          }).done(function (data) {
+            playlists = data.items;
+            
+            //
+            playlists.forEach(function(playlist) {
+            // Utiliza userPlaylistsTemplate para renderizar la lista de reproducción actual
+            var playlistHtml = userPlaylistsTemplate({
+              name: playlist.name
+            });
+
+            // Agrega el HTML renderizado al elemento userPlaylistsPlaceholder
+            userPlaylistsPlaceholder.innerHTML += playlistHtml;
+          });
+              //
+          });;
+        },false);
       }
     })();
   </script>
